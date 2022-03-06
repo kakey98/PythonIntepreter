@@ -58,8 +58,11 @@ class Intepreter(object):
     def expr(self):
         self.current_token = self.get_next_token()
 
-        left = self.current_token
-        self.eat(INTEGER)
+        left = Token(INTEGER,0)
+        while (self.current_token.type == INTEGER):
+            left = Token(INTEGER, left.value * 10 + self.current_token.value)
+            self.eat(INTEGER)
+
 
         op = self.current_token
         if op.type == PLUS:
@@ -69,8 +72,10 @@ class Intepreter(object):
         else:
             self.error()
 
-        right = self.current_token
-        self.eat(INTEGER)
+        right = Token(INTEGER,0)
+        while (self.current_token.type == INTEGER):
+            right = Token(INTEGER, right.value * 10 + self.current_token.value)
+            self.eat(INTEGER)
 
         if op.type == PLUS:
             result = left.value + right.value
@@ -78,7 +83,7 @@ class Intepreter(object):
             result = left.value - right.value
         else:
             raise Exception("Type of operator is invalid")
-            
+
 
         return result
         
