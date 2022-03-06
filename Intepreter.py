@@ -1,4 +1,5 @@
-INTEGER, PLUS, EOF = 'INTEGER', 'PLUS', 'EOF'
+from typing import *
+INTEGER, PLUS, MINUS, EOF = 'INTEGER', 'PLUS', 'MINUS', 'EOF'
 
 class Token(object):
     def __init__(self, type, value):
@@ -16,7 +17,7 @@ class Intepreter(object):
     def __init__(self, text):
         self.text = text
         self.pos = 0
-        self.current_token = None
+        self.current_token: Union[Token, None] = None
 
     def error(self):
         raise Exception('Error parsing input')
@@ -39,6 +40,11 @@ class Intepreter(object):
             token = Token(PLUS, current_char)
             self.pos += 1
             return token
+
+        if current_char == '-':
+            token = Token(MINUS, current_char)
+            self.pos += 1
+            return token
         
         self.error
 
@@ -50,18 +56,29 @@ class Intepreter(object):
             self.error()
 
     def expr(self):
-        self.current_token = self.get_next_token
+        self.current_token = self.get_next_token()
 
         left = self.current_token
         self.eat(INTEGER)
 
         op = self.current_token
-        self.eat(PLUS)
+        if op.type == PLUS:
+            self.eat(PLUS)
+        elif op.type == MINUS:
+            self.eat(MINUS)
+        else:
+            self.error()
 
         right = self.current_token
         self.eat(INTEGER)
 
-        result = left.value + right.value
+        if op.type == PLUS:
+            result = left.value + right.value
+        elif op.type == MINUS:
+            result = left.value - right.value
+        else:
+            raise Exception("Type of operator is invalid")
+            
 
         return result
         
