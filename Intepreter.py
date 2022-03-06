@@ -1,5 +1,5 @@
 from typing import *
-INTEGER, PLUS, MINUS, EOF = 'INTEGER', 'PLUS', 'MINUS', 'EOF'
+INTEGER, PLUS, MINUS, EOF, BLANK = 'INTEGER', 'PLUS', 'MINUS', 'EOF', 'BLANK'
 
 class Token(object):
     def __init__(self, type, value):
@@ -29,6 +29,10 @@ class Intepreter(object):
             return Token(EOF, None)
 
         current_char = text[self.pos]
+
+        while (current_char == ' '):
+            self.pos += 1
+            current_char = text[self.pos]
 
         if current_char.isdigit():
             token = Token(INTEGER, int(current_char))
