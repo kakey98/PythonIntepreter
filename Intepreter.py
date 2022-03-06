@@ -65,3 +65,19 @@ class Intepreter(object):
 
         return result
         
+
+def main():
+    while True:
+        try:
+            text = input('calc> ')
+        except EOFError:
+            break
+
+        if not text:
+            continue
+        intepreter = Intepreter(text)
+        result = intepreter.expr()
+        print(result)
+
+if __name__ == "__main__":
+    main()
